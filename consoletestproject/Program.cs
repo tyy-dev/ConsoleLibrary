@@ -9,12 +9,10 @@ namespace consoletestproject
     internal class Program
     {
         private static void Main() {
-            // todo MenuConfig.cs: display current selected menu option
-
             MenuConfig.Configurate(outputEncoding: Encoding.Unicode);
 
             Menu mainMenu = new(0, "Main Menu", [
-                new(1, "Display radio buttton exmapleq".Superscript(), (MenuOption context) => {
+                new(1, "Display radio buttton exmaple", (MenuOption context) => {
                     ConsoleInput.GetListBoxSelection("Select a colour", ["red", "green", "blue", "very blue"], (MenuOption optionContext, string option, int index) => {
                         ConsoleInput.GetKey($"Selected {option} [{index}]\nPress any key to continue...");
                     }, parentToShowAfterExecute: context?.parent, shouldRemoveMenuAfterExecute: true);
@@ -50,8 +48,6 @@ namespace consoletestproject
                         new(255, 0, 0) // Red
                     ]);
                    Console.WriteLine("White text on an gradient coloured background".Gradient(gradient, foreground: false).Coloured(new(255, 255, 255)));
-                   for (int i = 0; i < 120; i++)
-                        $"[{i}]{Ansi.Text.SelectGraphicRendition((byte)i)}AA[RESET] ".Format().Write();
                 }, isDebug: true),
                 new(3, "Go to sub menu by name",  (MenuOption context) => {
                     MenuService.GetMenuByName("Sub Menu")?.Show();
