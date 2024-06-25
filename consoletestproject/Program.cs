@@ -53,8 +53,10 @@ namespace consoletestproject
                 new(id: 3, "Go to sub menu by name",  (MenuOption context) => {
                     MenuService.GetMenuByName("Sub Menu")?.Show();
                 }, isDisabled: true),
+                new(id: 3, "Go to sub menu by submenu id",  (MenuOption context) => {
+                }, submenuId: 1),
                 new(id: 4, "Set option enabled/disabled", (MenuOption context) => {
-                    bool? value = ConsoleInput.GetAsBool("Do you want to disable the option above?? [Y/N]");
+                    bool? value = ConsoleInput.GetAsBool("Do you want to disable the option \"Go to sub menu by name\"? [Y/N]");
                     if (value is bool val) {
                         int? indexOfDisabledOption = context.parent?.MenuOptionIdToIndex(id: 3);
                         if (indexOfDisabledOption != null)
@@ -65,7 +67,7 @@ namespace consoletestproject
                 })
             ]);
 
-            Menu subMenu = new(1, "Sub Menu", [
+            Menu subMenu = new(id: 1, "Sub Menu", [
                 new(id: 1, "Counter: 1", (MenuOption context) => {
                     int counterNum = int.Parse(context.GetText(raw: true).Split("Counter: ")[1]);
                     context.SetText($"Counter: {++counterNum}", raw: true); // Set the text without ansi decorations
