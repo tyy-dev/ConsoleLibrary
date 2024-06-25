@@ -1,4 +1,4 @@
-﻿using consoletestproject.ConsoleHelper;
+using consoletestproject.ConsoleHelper;
 using consoletestproject.Extensions;
 
 namespace consoletestproject.Menus
@@ -13,17 +13,19 @@ namespace consoletestproject.Menus
         /// <summary>
         /// Represents the current menu being displayed / visited.
         /// </summary>
-        /// 
+        /// <typeinfo>public static Menu?</typeinfo>
         public static Menu? currentMenu = null;
 
         /// <summary>
         /// Keeps track of the history of menus that have been displayed / visited.
         /// </summary>
+        /// <typeinfo>public static List&lt;Menu></typeinfo>
         public static List<Menu> menuHistory = [];
 
         /// <summary>
         /// The list of menus managed by the service, this variable is automatically updated everytime a new menu is created
         /// </summary>
+        /// <typeinfo>public static List&lt;Menu></typeinfo>
         public static List<Menu> menus = [];
 
         #endregion Public Fields
@@ -31,8 +33,10 @@ namespace consoletestproject.Menus
         #region Private Fields
 
         /// <summary>
-        /// Backing field to avoid recursion in the selectedMenuOptionIndex proprety.
+        /// Backing field to avoid recursion in the selectedMenuOptionIndex property. <br> </br>
+        /// See <see cref="selectedMenuOptionIndex"/>
         /// </summary>
+        /// <typeinfo>public static int</typeinfo>
         private static int _selectedMenuOptionIndex = -1;
 
         #endregion Private Fields
@@ -49,6 +53,7 @@ namespace consoletestproject.Menus
         /// <value>
         /// The index of the currently selected menu option. Initialized to -1 if no option is selected.
         /// </value>
+        /// <typeinfo>public static int</typeinfo>
         public static int selectedMenuOptionIndex {
             get => _selectedMenuOptionIndex;
             set {
@@ -67,11 +72,13 @@ namespace consoletestproject.Menus
         /// Adds one or more menus to the service. However, there is no need to use this method directly as the list is automatically managed every time you create a new menu.
         /// </summary>
         /// <param name="menuOptions">The menus to be added.</param>
+        /// <typeinfo>static public void</typeinfo>
         static public void AddMenus(params Menu[] menuOptions) => MenuService.menus.AddRange(menuOptions);
 
         /// <summary>
         /// Clears all menus from the service, resetting the list to an empty state.
         /// </summary>
+        /// <typeinfo>static public void</typeinfo>
         static public void Clear() => menus.Clear();
 
         /// <summary>
@@ -79,6 +86,7 @@ namespace consoletestproject.Menus
         /// </summary>
         /// <param name="id">The unique identifier of the menu.</param>
         /// <returns>The menu with the specified ID, or <c>null</c> if not found.</returns>
+        /// <typeinfo>static public Menu?</typeinfo>
         static public Menu? GetMenuById(int id) => MenuService.menus.Find(menu => menu.id == id);
 
         /// <summary>
@@ -86,18 +94,21 @@ namespace consoletestproject.Menus
         /// </summary>
         /// <param name="name">The name of the menu to retrieve.</param>
         /// <returns>The first menu with the specified name, or <c>null</c> if none is found.</returns>
+        /// <typeinfo>static public Menu?</typeinfo>
         static public Menu? GetMenuByName(string name) => MenuService.menus.Find(menu => menu.name == name);
 
         /// <summary>
         /// Retrieves the entire menu history.
         /// </summary>
         /// <returns>The list of menus displayed / visited.</returns>
+        /// <typeinfo>static public List&lt;Menu></typeinfo>
         public static List<Menu> GetMenuHistory() => MenuService.menuHistory;
 
         /// <summary>
         /// Retrieves all menus managed by the service.
         /// </summary>
         /// <returns>The list of menus.</returns>
+        /// <typeinfo>static public List&lt;Menu></typeinfo>
         static public List<Menu> GetMenus() => MenuService.menus;
 
         /// <summary>
@@ -105,6 +116,7 @@ namespace consoletestproject.Menus
         /// </summary>
         /// <param name="name">The name of the menus to retrieve.</param>
         /// <returns>The list of menus with the specified name, or <c>null</c> if none are found.</returns>
+        /// <typeinfo>static public List&lt;Menu>?</typeinfo>
         static public List<Menu>? GetMenusByName(string name) {
             List<Menu> foundMenus = [.. MenuService.menus.FindAll(menu => menu.name == name)];
             return foundMenus.Count > 0 ? foundMenus : null;
@@ -114,6 +126,7 @@ namespace consoletestproject.Menus
         /// Retrieves the previous menu from the history of menus displayed / visited, it will keep going back in history till it finds the previous menu
         /// </summary>
         /// <returns>The previous menu from the history, or <c>null</c> if there's no previous menu.</returns>
+        /// <typeinfo>public static Menu?</typeinfo>
         public static Menu? GetPreviousMenuFromHistory() {
             List<Menu> menuHistory = MenuService.GetMenuHistory();
             int historyIndex = menuHistory.Count - 1; // Start from the end of the history
@@ -128,13 +141,14 @@ namespace consoletestproject.Menus
         }
 
         /// <summary>
-        /// Generates a unique menu ID that is not already in use by any existing menu.
+        /// Generates a unique menu ID that is not already in use by any existing menu. <br> </br>
+        /// The unique id is also offsetted by 1337 to avoid future id conflicts.
         /// </summary>
         /// <returns>A unique menu ID.</returns>
+        /// <typeinfo>public static int</typeinfo>
         public static int GetUniqueMenuId() {
             // Find the maximum ID currently used in menus
             int maxIdInUse = menus.Count > 0 ? menus.Max(menu => menu.id) : 0;
-
             return maxIdInUse + 1337; // Add a large num like 1337 so the id won't interfere with other ids.
         }
 
@@ -150,6 +164,7 @@ namespace consoletestproject.Menus
         /// </remarks>
         /// <seealso cref="MenuService.selectedMenuOptionIndex"/>
         /// <seealso cref="Menu"/>
+        /// <typeinfo>public static void</typeinfo>
         public static void HandleMenuKeyboardInput(ConsoleKey? keyPressed = null) {
             keyPressed ??= ConsoleInput.GetKey();
 
@@ -166,7 +181,7 @@ namespace consoletestproject.Menus
                         do {
                             selectedMenuOptionIndex--; // Move selection upwards
                         } // Till it finds a valid to "select" / go to
-                        while (MenuService.currentMenu.menuOptions.IsValidIndex(selectedMenuOptionIndex) && MenuService.currentMenu.menuOptions[selectedMenuOptionIndex].isDisabled);
+                        while (MenuService.currentMenu.menuOptions.IsValidIndex(selectedMenuOptionIndex) && MenuService.currentMenu.menuOptions[selectedMenuOptionIndex].isDisabled /* disabled options cant be selected */);
                     break;
                 case ConsoleKey.NumPad2: // numpad down
                 case ConsoleKey.DownArrow:
@@ -174,7 +189,7 @@ namespace consoletestproject.Menus
                         do {
                             selectedMenuOptionIndex++; // Move selection downwards
                         } // Till it finds a valid place to "select" / go to
-                        while (MenuService.currentMenu.menuOptions.IsValidIndex(selectedMenuOptionIndex) && MenuService.currentMenu.menuOptions[selectedMenuOptionIndex].isDisabled);
+                        while (MenuService.currentMenu.menuOptions.IsValidIndex(selectedMenuOptionIndex) && MenuService.currentMenu.menuOptions[selectedMenuOptionIndex].isDisabled /* disabled options cant be selected */);
                     if (MenuService.currentMenu?.menuOptions.Count == MenuService.selectedMenuOptionIndex)
                         MenuService.selectedMenuOptionIndex = 0;
                     break;
@@ -187,11 +202,13 @@ namespace consoletestproject.Menus
                     break;
             }
         }
+
         /// <summary>
         /// Removes a menu from the service based on its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the menu to remove.</param>
         /// <c>true</c> if the menu was removed; <c>false</c> if no menu was found by the specified id.
+        /// <typeinfo>static public bool</typeinfo>
         static public bool RemoveById(int id) {
             int numRemoved = MenuService.menus.RemoveAll(menu => menu.id == id);
             return numRemoved > 0;
@@ -201,6 +218,7 @@ namespace consoletestproject.Menus
         /// Sets the current menu to the specified menu and adds it to the menu history.
         /// </summary>
         /// <param name="menu">The menu to set as the current menu.</param>
+        /// <typeinfo>public static void</typeinfo>
         public static void SetCurrentMenu(Menu menu) {
             if (MenuConfig.displayCurrentMenuAsConsoleTitle)
                 Console.Title = $"{menu.name} [{menu.id}]";
@@ -208,6 +226,7 @@ namespace consoletestproject.Menus
             MenuService.currentMenu = menu;
             MenuService.menuHistory.Add(menu);
         }
+
         /// <summary>
         /// Sets the specified menu option as selected and updates the display accordingly.
         /// </summary>
@@ -218,12 +237,14 @@ namespace consoletestproject.Menus
         /// it sets the specified menu option to appear as selected (typically underlined) and refreshes the console display
         /// to reflect the updated selection.
         /// </remarks>
+        /// <typeinfo>static public void</typeinfo>
         static public void SetMenuOptionSelected(int index) {
             if (MenuService.currentMenu != null) {
                 List<MenuOption>? menuOptions = MenuService.currentMenu.GetMenuOptions();
                 if (menuOptions != null && menuOptions.IsValidIndex(index)) {
-                    if (menuOptions[index].isDisabled)
+                    if (menuOptions[index].isDisabled) // if the option is disabled it will be skipped for selection since disabled options cant be selected
                         return;
+
                     MenuService.currentMenu.SetOptionSelectedDecoration(index);
                     Console.Clear();
                     MenuService.currentMenu.Show();
@@ -235,6 +256,7 @@ namespace consoletestproject.Menus
         /// Displays the menu with the specified unique identifier on the console
         /// </summary>
         /// <param name="id">The unique identifier of the menu to be displayed.</param>
+        /// <typeinfo>static public void</typeinfo>
         static public void ShowById(int id) => MenuService.GetMenuById(id)?.Show();
 
         #endregion Public Methods
