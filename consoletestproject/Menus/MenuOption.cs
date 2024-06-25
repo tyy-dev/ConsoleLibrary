@@ -17,55 +17,12 @@ namespace consoletestproject.Menus
     /// <param name="parent"></param>
     public class MenuOption(int id, string? text = null, Action<MenuOption>? callback = null, int? submenuId = null, bool isDebug = false, bool isDisabled = false, Menu? parent = null)
     {
+        #region Public Fields
+
         /// <summary>
         /// The unique identifier of the menu option
         /// </summary>
         public int id = id;
-
-        /// <summary>
-        /// Backing field to avoid recursion in the text property.
-        /// </summary>
-        private string? _text = text;
-
-        /// <summary>
-        /// The text displayed for the menu option. Defaults to "Option {id}" if not provided in the constructor or SetText function
-        /// </summary>
-        public string text {
-            get => this.GetText();
-            set => this._text = value ?? $"Option {this.id}";
-        }
-
-        /// <summary>
-        /// Retrieves the text of the menu option with optional decoration.
-        /// </summary>
-        /// <param name="raw">If true, returns the raw text without decoration.</param>
-        /// <returns>The formatted or raw text of the menu option.</returns>
-        public string GetText(bool raw = false) {
-            if (raw)
-                return this._text ?? $"Option {this.id}";
-
-            return $"{(this.isDisabled == true ? "[STYLE Faint][STYLE Strikethrough]" : "")}{this.textDecoration}{this._text}[RESET]".Format();
-        }
-
-        /// <summary>
-        /// The decoration prefix text that is prepended to the menu option's displayed text.
-        /// </summary>
-        /// <remarks>
-        /// This decoration prefix is added directly to the beginning of the menu option's text when it is displayed. 
-        /// It can be set using <see cref="SetTextDecoration(string)"/> to customize the appearance of the menu option dynamically.
-        /// </remarks>
-        private string textDecoration = "";
-
-        /// <summary>
-        /// The callback action associated with the menu option. <br> </br>
-        /// The callback is triggered when <see cref="Execute"/> is invoked., your callback will be called with an instance of the MenuOption
-        /// </summary>
-        private readonly Action<MenuOption>? callback = callback;
-
-        /// <summary>
-        /// The identifier of a submenu associated with this option.
-        /// </summary>
-        public int? submenuId = submenuId;
 
         /// <summary>
         /// Indicates whether this is a debug option.
@@ -83,6 +40,51 @@ namespace consoletestproject.Menus
         /// when the menu option is added to a menu. By default, this property is set to <c>null</c>. <br> </br>
         /// </summary>
         public Menu? parent = parent;
+
+        /// <summary>
+        /// The identifier of a submenu associated with this option.
+        /// </summary>
+        public int? submenuId = submenuId;
+
+        #endregion Public Fields
+
+        #region Private Fields
+
+        /// <summary>
+        /// The callback action associated with the menu option. <br> </br>
+        /// The callback is triggered when <see cref="Execute"/> is invoked., your callback will be called with an instance of the MenuOption
+        /// </summary>
+        private readonly Action<MenuOption>? callback = callback;
+
+        /// <summary>
+        /// Backing field to avoid recursion in the text property.
+        /// </summary>
+        private string? _text = text;
+
+        /// <summary>
+        /// The decoration prefix text that is prepended to the menu option's displayed text.
+        /// </summary>
+        /// <remarks>
+        /// This decoration prefix is added directly to the beginning of the menu option's text when it is displayed.
+        /// It can be set using <see cref="SetTextDecoration(string)"/> to customize the appearance of the menu option dynamically.
+        /// </remarks>
+        private string textDecoration = "";
+
+        #endregion Private Fields
+
+        #region Public Properties
+
+        /// <summary>
+        /// The text displayed for the menu option. Defaults to "Option {id}" if not provided in the constructor or SetText function
+        /// </summary>
+        public string text {
+            get => this.GetText();
+            set => this._text = value ?? $"Option {this.id}";
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         /// <summary>
         /// Executes the callback Action associated with this menu option. <br></br>
@@ -125,6 +127,17 @@ namespace consoletestproject.Menus
         }
 
         /// <summary>
+        /// Retrieves the text of the menu option with optional decoration.
+        /// </summary>
+        /// <param name="raw">If true, returns the raw text without decoration.</param>
+        /// <returns>The formatted or raw text of the menu option.</returns>
+        public string GetText(bool raw = false) {
+            if (raw)
+                return this._text ?? $"Option {this.id}";
+
+            return $"{(this.isDisabled == true ? "[STYLE Faint][STYLE Strikethrough]" : "")}{this.textDecoration}{this._text}[RESET]".Format();
+        }
+        /// <summary>
         /// Sets the text of the menu option.
         /// </summary>
         /// <param name="text">The new text of the menu option. Defaults to "Option {id}" if not provided.</param>
@@ -141,9 +154,11 @@ namespace consoletestproject.Menus
         /// </summary>
         /// <param name="text">The prefix text to prepend to the menu option's text.</param>
         /// <remarks>
-        /// This method allows customizing the appearance of the menu option's text by adding a prefix with AnsiStyling for example. 
+        /// This method allows customizing the appearance of the menu option's text by adding a prefix with AnsiStyling for example.
         /// The prefix is applied immediately to the menu option's text and can be reset using <see cref="SetText"/>.
         /// </remarks>
         public void SetTextDecoration(string text) => this.textDecoration = text;
+
+        #endregion Public Methods
     }
 }

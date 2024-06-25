@@ -8,20 +8,26 @@ namespace consoletestproject.Menus
     /// </summary>
     public class Menu
     {
+        #region Public Fields
+
         /// <summary>
         /// The unique identifier of the menu.
         /// </summary>
         public int id = 0;
 
         /// <summary>
+        /// The list of menu options available in the menu.
+        /// </summary>
+        public List<MenuOption> menuOptions = [];
+
+        /// <summary>
         /// The name of the menu.
         /// </summary>
         public string name = "Menu";
 
-        /// <summary>
-        /// The list of menu options available in the menu.
-        /// </summary>
-        public List<MenuOption> menuOptions = [];
+        #endregion Public Fields
+
+        #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Menu"/> class.
@@ -45,33 +51,9 @@ namespace consoletestproject.Menus
             MenuService.AddMenus(this);
         }
 
-        /// <summary>
-        /// Wraps the addition of AddMenuOptions.
-        /// </summary>
-        /// <param name="name">The name of the menu option.</param>
-        /// <param name="callback">The callback action to be executed when the menu option is selected.</param>
-        /// <returns>The newly added menu option.</returns>
-        public MenuOption AddMenuOptionWrapper(string name, Action<MenuOption> callback) {
-            int id = this.menuOptions.IsEmptyOrNull() ? 1 : this.menuOptions.Last().id + 1;
-            this.AddMenuOptions(new MenuOption(id, name, callback));
+        #endregion Public Constructors
 
-            // null-forgiving operator, we tell the compiler that we know for certain this function wont return null,
-            // as we just added it in the line above.
-            return this.GetMenuOptionById(id)!;
-        }
-
-        /// <summary>
-        /// Resets the selected menu option, clearing any selection and resetting the display.
-        /// </summary>
-        /// <remarks>
-        /// This method resets the selected menu option within the current menu instance.
-        /// It sets the internal index of the selected menu option to -1, indicating no option is selected.
-        /// Additionally, it clears any visual indication of selection (such as underlining) from all menu options.
-        /// </remarks>
-        public void ResetSelectedOption() {
-            MenuService.selectedMenuOptionIndex = -1;
-            this.SetOptionSelectedDecoration(-1); // Passing -1 ensures no option is set to underlined, resetting all option styles.
-        }
+        #region Public Methods
 
         /// <summary>
         /// Adds a "Back" option to the menu with a callback to return to the previous menu that is different to the current one. <br></br>
@@ -122,6 +104,21 @@ namespace consoletestproject.Menus
         public void AddMenuOptions(MenuOption option) => this.AddMenuOptions([option]);
 
         /// <summary>
+        /// Wraps the addition of AddMenuOptions.
+        /// </summary>
+        /// <param name="name">The name of the menu option.</param>
+        /// <param name="callback">The callback action to be executed when the menu option is selected.</param>
+        /// <returns>The newly added menu option.</returns>
+        public MenuOption AddMenuOptionWrapper(string name, Action<MenuOption> callback) {
+            int id = this.menuOptions.IsEmptyOrNull() ? 1 : this.menuOptions.Last().id + 1;
+            this.AddMenuOptions(new MenuOption(id, name, callback));
+
+            // null-forgiving operator, we tell the compiler that we know for certain this function wont return null,
+            // as we just added it in the line above.
+            return this.GetMenuOptionById(id)!;
+        }
+
+        /// <summary>
         /// Retrieves a menu option by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the menu.</param>
@@ -130,11 +127,85 @@ namespace consoletestproject.Menus
 
         /// <summary>
         /// Gets the menu options available in the menu.
-        /// If <see cref="MenuConfig.shouldShowDebugOptions"/> is set to <c>false</c>, 
+        /// If <see cref="MenuConfig.shouldShowDebugOptions"/> is set to <c>false</c>,
         /// this will not return menu options where isDebug is set to <c>true</c>
         /// </summary>
         /// <returns>The list of available menu options.</returns>
         public List<MenuOption> GetMenuOptions() => this.menuOptions.Where(option => MenuConfig.shouldShowDebugOptions || !option.isDebug).ToList();
+
+        /// <summary>
+        /// Retrieves the index of the menu option with the specified ID.
+        /// </summary>
+        /// <param name="id">The unique identifier (ID) of the menu option to find.</param>
+        /// <returns>The zero-based index of the menu option if found; otherwise, <c>null</c>.</returns>
+        public int? MenuOptionIdToIndex(int id) {
+            MenuOption? menuOption = this.GetMenuOptionById(id);
+            if (menuOption == null) return null;
+
+            int indexOfMenuOption = this.menuOptions.IndexOf(menuOption);
+            return indexOfMenuOption != -1 ? indexOfMenuOption : null;
+        }
+
+        /// <summary>
+        /// Retrieves the unique identifier (ID) of the menu option at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the menu option to retrieve the ID for.</param>
+        /// <returns>The ID of the menu option if the index is valid; otherwise, <c>null</c>.</returns>
+        public int? MenuOptionIndexToId(int index) {
+            if (this.menuOptions.IsValidIndex(index))
+                return this.menuOptions[index].id;
+            return null;
+        }
+
+        /// <summary>
+        /// Removes this menu from the service.
+        /// </summary>
+        /// <returns><c>true</c> if the menu was removed; <c>false</c> if no menu was found by the specified id.</returns>
+        /// <remarks>
+        /// This method removes the menu instance from the <see cref="MenuService"/> by its unique identifier.
+        /// </remarks>
+        public bool Remove() => MenuService.RemoveById(this.id);
+
+        /// <summary>
+        /// Resets the selected menu option, clearing any selection and resetting the display.
+        /// </summary>
+        /// <remarks>
+        /// This method resets the selected menu option within the current menu instance.
+        /// It sets the internal index of the selected menu option to -1, indicating no option is selected.
+        /// Additionally, it clears any visual indication of selection (such as underlining) from all menu options.
+        /// </remarks>
+        public void ResetSelectedOption() {
+            MenuService.selectedMenuOptionIndex = -1;
+            this.SetOptionSelectedDecoration(-1); // Passing -1 ensures no option is set to underlined, resetting all option styles.
+        }
+        /// <summary>
+        /// Disables the specified menu option, when an MenuOption is disabled it cannot be selected / executed. <br> </br>
+        /// It also get's this text decoration: [STYLE Faint][STYLE Strikethrough]
+        /// </summary>
+        /// <param name="index">The zero-based index of the menu option to disable. This is not the option ID but the position in the menu options list aka the index.</param>
+        /// <param name="value"></param>
+        /// <remarks>
+        /// This method sets the <c>isDisabled</c> property of the menu option specified by <paramref name="index"/> to <c>true</c>, making it disabled.
+        /// </remarks>
+        public void SetOptionDisabled(int index, bool value) {
+            if (this.menuOptions.IsValidIndex(index))
+                this.menuOptions[index].isDisabled = value;
+        }
+
+        /// <summary>
+        /// Sets the specified menu option to appear with selected decoration
+        /// </summary>
+        /// <param name="index">The zero-based index of the menu option to set blinking. This is not the option ID but the position in the menu options list.</param>
+        /// <remarks>
+        /// This method modifies the appearance of the menu option specified by <paramref name="index"/> to include a selected styled effect.
+        /// </remarks>
+        public void SetOptionSelectedDecoration(int index) {
+            foreach (MenuOption menuOption in this.GetMenuOptions())
+                menuOption.SetTextDecoration("");
+
+            if (this.menuOptions.IsValidIndex(index))
+                this.menuOptions[index].SetTextDecoration("[STYLE DoubleUnderline][COLOR 251,245,210]");
+        }
 
         /// <summary>
         /// Displays the menu on the console with specified text Colour.
@@ -168,66 +239,6 @@ namespace consoletestproject.Menus
             MenuService.SetCurrentMenu(this);
         }
 
-        /// <summary>
-        /// Sets the specified menu option to appear with selected decoration
-        /// </summary>
-        /// <param name="index">The zero-based index of the menu option to set blinking. This is not the option ID but the position in the menu options list.</param>
-        /// <remarks>
-        /// This method modifies the appearance of the menu option specified by <paramref name="index"/> to include a selected styled effect.
-        /// </remarks>
-        public void SetOptionSelectedDecoration(int index) {
-            foreach (MenuOption menuOption in this.GetMenuOptions())
-                menuOption.SetTextDecoration("");
-
-            if (this.menuOptions.IsValidIndex(index))
-                this.menuOptions[index].SetTextDecoration("[STYLE DoubleUnderline][COLOR 251,245,210]");
-        }
-
-        /// <summary>
-        /// Disables the specified menu option, when an MenuOption is disabled it cannot be selected / executed. <br> </br>
-        /// It also get's this text decoration: [STYLE Faint][STYLE Strikethrough]
-        /// </summary>
-        /// <param name="index">The zero-based index of the menu option to disable. This is not the option ID but the position in the menu options list aka the index.</param>
-        /// <param name="value"></param>
-        /// <remarks>
-        /// This method sets the <c>isDisabled</c> property of the menu option specified by <paramref name="index"/> to <c>true</c>, making it disabled.
-        /// </remarks>
-        public void SetOptionDisabled(int index, bool value) {
-            if (this.menuOptions.IsValidIndex(index))
-                this.menuOptions[index].isDisabled = value;
-        }
-
-        /// <summary>
-        /// Retrieves the unique identifier (ID) of the menu option at the specified index.
-        /// </summary>
-        /// <param name="index">The zero-based index of the menu option to retrieve the ID for.</param>
-        /// <returns>The ID of the menu option if the index is valid; otherwise, <c>null</c>.</returns>
-        public int? MenuOptionIndexToId(int index) {
-            if (this.menuOptions.IsValidIndex(index))
-                return this.menuOptions[index].id;
-            return null;
-        }
-
-        /// <summary>
-        /// Retrieves the index of the menu option with the specified ID.
-        /// </summary>
-        /// <param name="id">The unique identifier (ID) of the menu option to find.</param>
-        /// <returns>The zero-based index of the menu option if found; otherwise, <c>null</c>.</returns>
-        public int? MenuOptionIdToIndex(int id) {
-            MenuOption? menuOption = this.GetMenuOptionById(id);
-            if (menuOption == null) return null;
-
-            int indexOfMenuOption = this.menuOptions.IndexOf(menuOption);
-            return indexOfMenuOption != -1 ? indexOfMenuOption : null;
-        }
-
-        /// <summary>
-        /// Removes this menu from the service.
-        /// </summary>
-        /// <returns><c>true</c> if the menu was removed; <c>false</c> if no menu was found by the specified id.</returns>
-        /// <remarks>
-        /// This method removes the menu instance from the <see cref="MenuService"/> by its unique identifier.
-        /// </remarks>
-        public bool Remove() => MenuService.RemoveById(this.id);
+        #endregion Public Methods
     }
 }

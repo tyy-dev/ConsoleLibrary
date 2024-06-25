@@ -8,10 +8,7 @@ namespace consoletestproject.Menus
     /// </summary>
     public class MenuService
     {
-        /// <summary>
-        /// The list of menus managed by the service, this variable is automatically updated everytime a new menu is created
-        /// </summary>
-        public static List<Menu> menus = [];
+        #region Public Fields
 
         /// <summary>
         /// Represents the current menu being displayed / visited.
@@ -20,9 +17,27 @@ namespace consoletestproject.Menus
         public static Menu? currentMenu = null;
 
         /// <summary>
+        /// Keeps track of the history of menus that have been displayed / visited.
+        /// </summary>
+        public static List<Menu> menuHistory = [];
+
+        /// <summary>
+        /// The list of menus managed by the service, this variable is automatically updated everytime a new menu is created
+        /// </summary>
+        public static List<Menu> menus = [];
+
+        #endregion Public Fields
+
+        #region Private Fields
+
+        /// <summary>
         /// Backing field to avoid recursion in the selectedMenuOptionIndex proprety.
         /// </summary>
         private static int _selectedMenuOptionIndex = -1;
+
+        #endregion Private Fields
+
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the index of the currently selected menu option.
@@ -42,6 +57,85 @@ namespace consoletestproject.Menus
                     MenuService.SetMenuOptionSelected(value);
             }
 
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        /// <summary>
+        /// Adds one or more menus to the service. However, there is no need to use this method directly as the list is automatically managed every time you create a new menu.
+        /// </summary>
+        /// <param name="menuOptions">The menus to be added.</param>
+        static public void AddMenus(params Menu[] menuOptions) => MenuService.menus.AddRange(menuOptions);
+
+        /// <summary>
+        /// Clears all menus from the service, resetting the list to an empty state.
+        /// </summary>
+        static public void Clear() => menus.Clear();
+
+        /// <summary>
+        /// Retrieves a menu by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the menu.</param>
+        /// <returns>The menu with the specified ID, or <c>null</c> if not found.</returns>
+        static public Menu? GetMenuById(int id) => MenuService.menus.Find(menu => menu.id == id);
+
+        /// <summary>
+        /// Retrieves the first menu found with a specific name.
+        /// </summary>
+        /// <param name="name">The name of the menu to retrieve.</param>
+        /// <returns>The first menu with the specified name, or <c>null</c> if none is found.</returns>
+        static public Menu? GetMenuByName(string name) => MenuService.menus.Find(menu => menu.name == name);
+
+        /// <summary>
+        /// Retrieves the entire menu history.
+        /// </summary>
+        /// <returns>The list of menus displayed / visited.</returns>
+        public static List<Menu> GetMenuHistory() => MenuService.menuHistory;
+
+        /// <summary>
+        /// Retrieves all menus managed by the service.
+        /// </summary>
+        /// <returns>The list of menus.</returns>
+        static public List<Menu> GetMenus() => MenuService.menus;
+
+        /// <summary>
+        /// Retrieves all menus with a specific name.
+        /// </summary>
+        /// <param name="name">The name of the menus to retrieve.</param>
+        /// <returns>The list of menus with the specified name, or <c>null</c> if none are found.</returns>
+        static public List<Menu>? GetMenusByName(string name) {
+            List<Menu> foundMenus = [.. MenuService.menus.FindAll(menu => menu.name == name)];
+            return foundMenus.Count > 0 ? foundMenus : null;
+        }
+
+        /// <summary>
+        /// Retrieves the previous menu from the history of menus displayed / visited, it will keep going back in history till it finds the previous menu
+        /// </summary>
+        /// <returns>The previous menu from the history, or <c>null</c> if there's no previous menu.</returns>
+        public static Menu? GetPreviousMenuFromHistory() {
+            List<Menu> menuHistory = MenuService.GetMenuHistory();
+            int historyIndex = menuHistory.Count - 1; // Start from the end of the history
+
+            // Traverse the menu history from the end towards the beginning
+            while (historyIndex > 0 && MenuService.currentMenu?.id == menuHistory[historyIndex - 1].id) {
+                historyIndex--; // Move to the previous menu until finding a different one
+            }
+
+            // If a different menu is found before reaching the beginning of the history, return it; otherwise, return null
+            return historyIndex > 0 ? menuHistory[historyIndex - 1] : null;
+        }
+
+        /// <summary>
+        /// Generates a unique menu ID that is not already in use by any existing menu.
+        /// </summary>
+        /// <returns>A unique menu ID.</returns>
+        public static int GetUniqueMenuId() {
+            // Find the maximum ID currently used in menus
+            int maxIdInUse = menus.Count > 0 ? menus.Max(menu => menu.id) : 0;
+
+            return maxIdInUse + 1337; // Add a large num like 1337 so the id won't interfere with other ids.
         }
 
         /// <summary>
@@ -93,11 +187,15 @@ namespace consoletestproject.Menus
                     break;
             }
         }
-
         /// <summary>
-        /// Keeps track of the history of menus that have been displayed / visited.
+        /// Removes a menu from the service based on its unique identifier.
         /// </summary>
-        public static List<Menu> menuHistory = [];
+        /// <param name="id">The unique identifier of the menu to remove.</param>
+        /// <c>true</c> if the menu was removed; <c>false</c> if no menu was found by the specified id.
+        static public bool RemoveById(int id) {
+            int numRemoved = MenuService.menus.RemoveAll(menu => menu.id == id);
+            return numRemoved > 0;
+        }
 
         /// <summary>
         /// Sets the current menu to the specified menu and adds it to the menu history.
@@ -110,55 +208,6 @@ namespace consoletestproject.Menus
             MenuService.currentMenu = menu;
             MenuService.menuHistory.Add(menu);
         }
-
-        /// <summary>
-        /// Retrieves the previous menu from the history of menus displayed / visited, it will keep going back in history till it finds the previous menu
-        /// </summary>
-        /// <returns>The previous menu from the history, or <c>null</c> if there's no previous menu.</returns>
-        public static Menu? GetPreviousMenuFromHistory() {
-            List<Menu> menuHistory = MenuService.GetMenuHistory();
-            int historyIndex = menuHistory.Count - 1; // Start from the end of the history
-
-            // Traverse the menu history from the end towards the beginning
-            while (historyIndex > 0 && MenuService.currentMenu?.id == menuHistory[historyIndex - 1].id) {
-                historyIndex--; // Move to the previous menu until finding a different one
-            }
-
-            // If a different menu is found before reaching the beginning of the history, return it; otherwise, return null
-            return historyIndex > 0 ? menuHistory[historyIndex - 1] : null;
-        }
-
-        /// <summary>
-        /// Retrieves the entire menu history.
-        /// </summary>
-        /// <returns>The list of menus displayed / visited.</returns>
-        public static List<Menu> GetMenuHistory() => MenuService.menuHistory;
-
-        /// <summary>
-        /// Adds one or more menus to the service. However, there is no need to use this method directly as the list is automatically managed every time you create a new menu.
-        /// </summary>
-        /// <param name="menuOptions">The menus to be added.</param>
-        static public void AddMenus(params Menu[] menuOptions) => MenuService.menus.AddRange(menuOptions);
-
-        /// <summary>
-        /// Retrieves all menus managed by the service.
-        /// </summary>
-        /// <returns>The list of menus.</returns>
-        static public List<Menu> GetMenus() => MenuService.menus;
-
-        /// <summary>
-        /// Retrieves a menu by its unique identifier.
-        /// </summary>
-        /// <param name="id">The unique identifier of the menu.</param>
-        /// <returns>The menu with the specified ID, or <c>null</c> if not found.</returns>
-        static public Menu? GetMenuById(int id) => MenuService.menus.Find(menu => menu.id == id);
-
-        /// <summary>
-        /// Displays the menu with the specified unique identifier on the console
-        /// </summary>
-        /// <param name="id">The unique identifier of the menu to be displayed.</param>
-        static public void ShowById(int id) => MenuService.GetMenuById(id)?.Show();
-
         /// <summary>
         /// Sets the specified menu option as selected and updates the display accordingly.
         /// </summary>
@@ -183,46 +232,11 @@ namespace consoletestproject.Menus
         }
 
         /// <summary>
-        /// Removes a menu from the service based on its unique identifier.
+        /// Displays the menu with the specified unique identifier on the console
         /// </summary>
-        /// <param name="id">The unique identifier of the menu to remove.</param>
-        /// <c>true</c> if the menu was removed; <c>false</c> if no menu was found by the specified id.
-        static public bool RemoveById(int id) {
-            int numRemoved = MenuService.menus.RemoveAll(menu => menu.id == id);
-            return numRemoved > 0;
-        }
+        /// <param name="id">The unique identifier of the menu to be displayed.</param>
+        static public void ShowById(int id) => MenuService.GetMenuById(id)?.Show();
 
-        /// <summary>
-        /// Clears all menus from the service, resetting the list to an empty state.
-        /// </summary>
-        static public void Clear() => menus.Clear();
-
-        /// <summary>
-        /// Retrieves the first menu found with a specific name.
-        /// </summary>
-        /// <param name="name">The name of the menu to retrieve.</param>
-        /// <returns>The first menu with the specified name, or <c>null</c> if none is found.</returns>
-        static public Menu? GetMenuByName(string name) => MenuService.menus.Find(menu => menu.name == name);
-
-        /// <summary>
-        /// Retrieves all menus with a specific name.
-        /// </summary>
-        /// <param name="name">The name of the menus to retrieve.</param>
-        /// <returns>The list of menus with the specified name, or <c>null</c> if none are found.</returns>
-        static public List<Menu>? GetMenusByName(string name) {
-            List<Menu> foundMenus = [.. MenuService.menus.FindAll(menu => menu.name == name)];
-            return foundMenus.Count > 0 ? foundMenus : null;
-        }
-
-        /// <summary>
-        /// Generates a unique menu ID that is not already in use by any existing menu.
-        /// </summary>
-        /// <returns>A unique menu ID.</returns>
-        public static int GetUniqueMenuId() {
-            // Find the maximum ID currently used in menus
-            int maxIdInUse = menus.Count > 0 ? menus.Max(menu => menu.id) : 0;
-
-            return maxIdInUse + 1337; // Add a large num like 1337 so the id won't interfere with other ids.
-        }
+        #endregion Public Methods
     }
 }

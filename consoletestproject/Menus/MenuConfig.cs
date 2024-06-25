@@ -1,4 +1,5 @@
 ﻿using System.Text;
+
 namespace consoletestproject.Menus
 {
     /// <summary>
@@ -7,9 +8,9 @@ namespace consoletestproject.Menus
     public static class MenuConfig
     {
         /// <summary>
-        /// This indicates whether the console should be cleared before displaying / visiting a menu.
+        /// Backing field to avoid recursion in the outputEncoding proprety.
         /// </summary>
-        public static bool clearConsoleAfterVisit { get; set; } = true;
+        private static Encoding _outputEncoding = Encoding.UTF8;
 
         /// <summary>
         /// This indicates whether the console should be cleared after executing a "MenuOption" / command
@@ -17,37 +18,14 @@ namespace consoletestproject.Menus
         public static bool clearConsoleAfterExecute { get; set; } = false;
 
         /// <summary>
-        /// The standard input delimiter used in ConsoleInput.sc
+        /// This indicates whether the console should be cleared before displaying / visiting a menu.
         /// </summary>
-        public static string standardInputDelimiter { get; set; } = ">>";
-
-        /// <summary>
-        /// MenuOption's marked as "isDebug" will not be shown if set to <c>false</c>
-        /// </summary>
-        public static bool shouldShowDebugOptions { get; set; } = true;
-
-        /// <summary>
-        /// MenuOption's marked as "isDebug" will be marked with a purple suffix saying "DEBUG"
-        /// </summary>
-        public static bool shouldMarkDebugOptions { get; set; } = false;
-
+        public static bool clearConsoleAfterVisit { get; set; } = true;
         /// <summary>
         /// This indicates whether the current menu's name should be displayed as the console title. <br> </br>
         /// The format for this is: $"{this.name} [{this.id}]".
         /// </summary>
         public static bool displayCurrentMenuAsConsoleTitle { get; set; } = true;
-
-        /// <summary>
-        /// Indicates whether the cursor should be automatically hidden and displayed during menu interactions. <br> </br>
-        /// If <c>true</c>, the cursor will be hidden when displaying the menu and shown when prompting for input. <br> </br>
-        /// If <c>false</c>, the cursor will always be shown. <br> </br>
-        /// </summary>
-        public static bool shouldHideAndDisplayCursorAutomatically { get; set; } = true;
-
-        /// <summary>
-        /// Backing field to avoid recursion in the outputEncoding proprety.
-        /// </summary>
-        private static Encoding _outputEncoding = Encoding.UTF8;
 
         /// <summary>
         /// Gets or sets the output encoding for the console.
@@ -63,6 +41,27 @@ namespace consoletestproject.Menus
             }
         }
 
+        /// <summary>
+        /// Indicates whether the cursor should be automatically hidden and displayed during menu interactions. <br> </br>
+        /// If <c>true</c>, the cursor will be hidden when displaying the menu and shown when prompting for input. <br> </br>
+        /// If <c>false</c>, the cursor will always be shown. <br> </br>
+        /// </summary>
+        public static bool shouldHideAndDisplayCursorAutomatically { get; set; } = true;
+
+        /// <summary>
+        /// MenuOption's marked as "isDebug" will be marked with a purple suffix saying "DEBUG"
+        /// </summary>
+        public static bool shouldMarkDebugOptions { get; set; } = false;
+
+        /// <summary>
+        /// MenuOption's marked as "isDebug" will not be shown if set to <c>false</c>
+        /// </summary>
+        public static bool shouldShowDebugOptions { get; set; } = true;
+
+        /// <summary>
+        /// The standard input delimiter used in ConsoleInput.sc
+        /// </summary>
+        public static string standardInputDelimiter { get; set; } = ">>";
         /// <summary>
         /// Configures various settings related to menu behavior and console output. <br> </br>
         /// For more info regarding parameters, instead of hovering over the parameters see the original property in MenuConfig

@@ -5,6 +5,8 @@
     /// </summary>
     public static class EnumerableExtensions
     {
+        #region Public Methods
+
         /// <summary>
         /// Checks if the specified enumerable collection is either null, empty, or consists of only null or whitespace elements (if the enumerable is of type string).
         /// </summary>
@@ -34,5 +36,7 @@
 
             return index >= 0 && index < enumerable.Count();
         }
+
+        #endregion Public Methods
     }
 }

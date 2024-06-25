@@ -5,11 +5,13 @@
     /// </summary>
     public class Colour
     {
+        #region Public Fields
+
         /// <summary>
-        /// The red component of the color (0-255).
+        /// The blue component of the color (0-255).
         /// </summary>
         /// <typeinfo>public byte</typeinfo>
-        public byte r = 0;
+        public byte b = 0;
 
         /// <summary>
         /// The green component of the color (0-255).
@@ -18,10 +20,14 @@
         public byte g = 0;
 
         /// <summary>
-        /// The blue component of the color (0-255).
+        /// The red component of the color (0-255).
         /// </summary>
         /// <typeinfo>public byte</typeinfo>
-        public byte b = 0;
+        public byte r = 0;
+
+        #endregion Public Fields
+
+        #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Colour"/> class
@@ -56,45 +62,9 @@
         /// <typeinfo>public</typeinfo>
         public Colour() { }
 
-        /// <summary>
-        /// Converts the current RGB Colour values to a hexadecimal Colour code.
-        /// </summary>
-        /// <returns>A string representing the hexadecimal Colour code.</returns>
-        /// <typeinfo>public string</typeinfo>
-        public string ToHex() => Colour.RgbToHex(this.r, this.g, this.b);
+        #endregion Public Constructors
 
-        /// <summary>
-        /// Converts a hexadecimal Colour code to its corresponding RGB representation.
-        /// </summary>
-        /// <param name="hexColour">The hexadecimal Colour code to convert.</param>
-        /// <param name="r">When this method returns, contains the red component of the RGB representation of the Colour, as a byte.</param>
-        /// <param name="g">When this method returns, contains the green component of the RGB representation of the Colour, as a byte.</param>
-        /// <param name="b">When this method returns, contains the blue component of the RGB representation of the Colour, as a byte.</param>
-        /// <exception cref="ArgumentException">Thrown when the input hex Colour string is not in the correct format (#RRGGBB).</exception>
-        /// <typeinfo>public static void</typeinfo>
-        public static void HexToRgb(string hexColour, out byte r, out byte g, out byte b) {
-            if (hexColour.StartsWith('#')) // Get if the first character is, startsWith
-                hexColour = hexColour[1..]; // Remove the first character, slice
-
-            if (hexColour.Length != 6)
-                throw new ArgumentException("Invalid hex Colour string. It should be in the format #RRGGBB or RRGGBB", nameof(hexColour));
-
-            r = Convert.ToByte(hexColour[..2], 16);
-            g = Convert.ToByte(hexColour[2..4], 16);
-            b = Convert.ToByte(hexColour[4..6], 16);
-        }
-
-        /// <summary>
-        /// Converts RGB values to a hexadecimal Colour code.
-        /// </summary>
-        /// <param name="r">The red component of the Colour, as a byte.</param>
-        /// <param name="g">The green component of the Colour, as a byte.</param>
-        /// <param name="b">The blue component of the Colour, as a byte.</param>
-        /// <returns>The hexadecimal Colour code as a string.</returns>
-        /// <typeinfo>public static string</typeinfo>
-        public static string RgbToHex(byte r, byte g, byte b) {
-            return $"#{r:X2}{g:X2}{b:X2}";
-        }
+        #region Public Methods
 
         /// <summary>
         /// Generates a gradient between given colours.
@@ -118,42 +88,24 @@
         }
 
         /// <summary>
-        /// Interpolates between two colours.
+        /// Converts a hexadecimal Colour code to its corresponding RGB representation.
         /// </summary>
-        /// <param name="start">The starting colour.</param>
-        /// <param name="end">The ending colour.</param>
-        /// <param name="granularity">The number of steps in the interpolation.</param>
-        /// <param name="results">The list to store the interpolated colours.</param>
-        /// <typeinfo>private static void</typeinfo>
-        private static void InterpolateColors(Colour start, Colour end, int granularity, List<Colour> results) {
-            for (int j = 0; j <= granularity; j++) {
-                double ratio = (double)j / granularity;
-                byte interpolatedR = Interpolate(start.r, end.r, ratio);
-                byte interpolatedG = Interpolate(start.g, end.g, ratio);
-                byte interpolatedB = Interpolate(start.b, end.b, ratio);
-                results.Add(new(interpolatedR, interpolatedG, interpolatedB));
-            }
-        }
+        /// <param name="hexColour">The hexadecimal Colour code to convert.</param>
+        /// <param name="r">When this method returns, contains the red component of the RGB representation of the Colour, as a byte.</param>
+        /// <param name="g">When this method returns, contains the green component of the RGB representation of the Colour, as a byte.</param>
+        /// <param name="b">When this method returns, contains the blue component of the RGB representation of the Colour, as a byte.</param>
+        /// <exception cref="ArgumentException">Thrown when the input hex Colour string is not in the correct format (#RRGGBB).</exception>
+        /// <typeinfo>public static void</typeinfo>
+        public static void HexToRgb(string hexColour, out byte r, out byte g, out byte b) {
+            if (hexColour.StartsWith('#')) // Get if the first character is, startsWith
+                hexColour = hexColour[1..]; // Remove the first character, slice
 
-        /// <summary>
-        /// Interpolates between two values.
-        /// </summary>
-        /// <param name="start">The starting value.</param>
-        /// <param name="end">The ending value.</param>
-        /// <param name="ratio">The interpolation ratio.</param>
-        /// <returns>The interpolated value.</returns>
-        /// <typeinfo>private static byte</typeinfo>
-        private static byte Interpolate(byte start, byte end, double ratio) {
-            return (byte)(start * (1 - ratio) + end * ratio);
-        }
+            if (hexColour.Length != 6)
+                throw new ArgumentException("Invalid hex Colour string. It should be in the format #RRGGBB or RRGGBB", nameof(hexColour));
 
-        /// <summary>
-        /// Calculates and returns the complementary color of the current color.
-        /// </summary>
-        /// <returns>The complementary <see cref="Colour"/> object.</returns>
-        /// <typeinfo>public Colour</typeinfo>
-        public Colour GetComplementary() {
-            return new((byte)(255 - r), (byte)(255 - g), (byte)(255 - b));
+            r = Convert.ToByte(hexColour[..2], 16);
+            g = Convert.ToByte(hexColour[2..4], 16);
+            b = Convert.ToByte(hexColour[4..6], 16);
         }
 
         /// <summary>
@@ -180,5 +132,69 @@
 
             return null;  // Return null if input doesn't match expected formats
         }
+
+        /// <summary>
+        /// Converts RGB values to a hexadecimal Colour code.
+        /// </summary>
+        /// <param name="r">The red component of the Colour, as a byte.</param>
+        /// <param name="g">The green component of the Colour, as a byte.</param>
+        /// <param name="b">The blue component of the Colour, as a byte.</param>
+        /// <returns>The hexadecimal Colour code as a string.</returns>
+        /// <typeinfo>public static string</typeinfo>
+        public static string RgbToHex(byte r, byte g, byte b) {
+            return $"#{r:X2}{g:X2}{b:X2}";
+        }
+
+        /// <summary>
+        /// Calculates and returns the complementary color of the current color.
+        /// </summary>
+        /// <returns>The complementary <see cref="Colour"/> object.</returns>
+        /// <typeinfo>public Colour</typeinfo>
+        public Colour GetComplementary() {
+            return new((byte)(255 - r), (byte)(255 - g), (byte)(255 - b));
+        }
+
+        /// <summary>
+        /// Converts the current RGB Colour values to a hexadecimal Colour code.
+        /// </summary>
+        /// <returns>A string representing the hexadecimal Colour code.</returns>
+        /// <typeinfo>public string</typeinfo>
+        public string ToHex() => Colour.RgbToHex(this.r, this.g, this.b);
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        /// <summary>
+        /// Interpolates between two values.
+        /// </summary>
+        /// <param name="start">The starting value.</param>
+        /// <param name="end">The ending value.</param>
+        /// <param name="ratio">The interpolation ratio.</param>
+        /// <returns>The interpolated value.</returns>
+        /// <typeinfo>private static byte</typeinfo>
+        private static byte Interpolate(byte start, byte end, double ratio) {
+            return (byte)(start * (1 - ratio) + end * ratio);
+        }
+
+        /// <summary>
+        /// Interpolates between two colours.
+        /// </summary>
+        /// <param name="start">The starting colour.</param>
+        /// <param name="end">The ending colour.</param>
+        /// <param name="granularity">The number of steps in the interpolation.</param>
+        /// <param name="results">The list to store the interpolated colours.</param>
+        /// <typeinfo>private static void</typeinfo>
+        private static void InterpolateColors(Colour start, Colour end, int granularity, List<Colour> results) {
+            for (int j = 0; j <= granularity; j++) {
+                double ratio = (double)j / granularity;
+                byte interpolatedR = Interpolate(start.r, end.r, ratio);
+                byte interpolatedG = Interpolate(start.g, end.g, ratio);
+                byte interpolatedB = Interpolate(start.b, end.b, ratio);
+                results.Add(new(interpolatedR, interpolatedG, interpolatedB));
+            }
+        }
+
+        #endregion Private Methods
     }
 }

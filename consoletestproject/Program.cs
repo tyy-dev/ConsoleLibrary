@@ -3,6 +3,7 @@ using consoletestproject.Coloureds;
 using consoletestproject.ConsoleHelper;
 using consoletestproject.Extensions;
 using consoletestproject.Menus;
+
 namespace consoletestproject
 {
     internal class Program
@@ -51,7 +52,6 @@ namespace consoletestproject
                    Console.WriteLine("White text on an gradient coloured background".Gradient(gradient, foreground: false).Coloured(new(255, 255, 255)));
                    for (int i = 0; i < 120; i++)
                         $"[{i}]{Ansi.Text.SelectGraphicRendition((byte)i)}AA[RESET] ".Format().Write();
-
                 }, isDebug: true),
                 new(3, "Go to sub menu by name",  (MenuOption context) => {
                     MenuService.GetMenuByName("Sub Menu")?.Show();
