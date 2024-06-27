@@ -1322,7 +1322,7 @@ Sets the text of the menu option.
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | text | System.String | The new text of the menu option. Defaults to "Option {id}" if not provided.
-| raw | System.Boolean | 
+| raw | System.Boolean | If true sets the text without decoration / or ansi styling
 
 ---
 <a name='M:consoletestproject.Menus.MenuOption.SetTextDecoration(System.String)'></a>
