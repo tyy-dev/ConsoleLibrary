@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace consoletestproject.Coloureds
 {
@@ -102,8 +102,8 @@ namespace consoletestproject.Coloureds
         /// <exception cref="ArgumentException">Thrown when the input hex Colour string is not in the correct format (#RRGGBB).</exception>
         /// <typeinfo>public static void</typeinfo>
         public static void HexToRgb(string hexColour, out byte r, out byte g, out byte b) {
-            if (IsHexFormat(hexColour))
-                throw new ArgumentException("Invalid hex Colour string. It should be in the format #RRGGBB or RRGGBB", nameof(hexColour));
+            if (!IsHexFormat(hexColour))
+                throw new ArgumentException("Invalid hex Colour string. It should be in the format #RRGGBB or RRGGBB", nameof(hexColour) + hexColour);
 
             if (hexColour.StartsWith('#')) // Get if the first character is, startsWith
                 hexColour = hexColour[1..]; // Remove the first character, slice

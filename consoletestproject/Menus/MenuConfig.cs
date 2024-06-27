@@ -21,6 +21,7 @@ namespace consoletestproject.Menus
         /// This indicates whether the console should be cleared before displaying / visiting a menu.
         /// </summary>
         public static bool clearConsoleAfterVisit { get; set; } = true;
+
         /// <summary>
         /// This indicates whether the current menu's name should be displayed as the console title. <br> </br>
         /// The format for this is: $"{this.name} [{this.id}]".
@@ -62,6 +63,7 @@ namespace consoletestproject.Menus
         /// The standard input delimiter used in ConsoleInput.sc
         /// </summary>
         public static string standardInputDelimiter { get; set; } = ">>";
+
         /// <summary>
         /// Configures various settings related to menu behavior and console output. <br> </br>
         /// For more info regarding parameters, instead of hovering over the parameters see the original property in MenuConfig

@@ -178,6 +178,7 @@ namespace consoletestproject.Menus
             MenuService.selectedMenuOptionIndex = -1;
             this.SetOptionSelectedDecoration(-1); // Passing -1 ensures no option is set to underlined, resetting all option styles.
         }
+
         /// <summary>
         /// Disables the specified menu option, when an MenuOption is disabled it cannot be selected / executed. <br> </br>
         /// It also get's this text decoration: [STYLE Faint][STYLE Strikethrough]

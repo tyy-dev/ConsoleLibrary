@@ -72,42 +72,52 @@ namespace consoletestproject.ConsoleHelper
             /// Used for resetting all text attributes/styles regarding ansi escape codes.
             /// </summary>
             Reset = 0,
+
             /// <summary>
             /// Used for increased intensity (opposite of Faint where it is used for decreased intensity)
             /// </summary>
             Bold = 1,
+
             /// <summary>
             /// Used for decreased intensity (opposite of bold where it is used for increased intensity)
             /// </summary>
             Faint = 2,
+
             /// <summary>
             /// Used for italicizing text
             /// </summary>
             Italic = 3,
+
             /// <summary>
             /// Used for underlinning text.
             /// </summary>
             Underline = 4,
+
             /// <summary>
             /// Used for slow-blinking text.
             /// </summary>
             Blink = 5,
+
             /// <summary>
             /// Used for inverting the foreground and background colors.
             /// </summary>
             Invert = 7,
+
             /// <summary>
             /// Used for "concealing" the text / making the text invisible
             /// </summary>
             Concealed = 8,
+
             /// <summary>
             /// Used for strikethrough text
             /// </summary>
             Strikethrough = 9,
+
             /// <summary>
             /// Used for double underlining text
             /// </summary>
             DoubleUnderline = 21,
+
             /// <summary>
             /// Used for overlining text
             /// </summary>
@@ -303,6 +313,7 @@ namespace consoletestproject.ConsoleHelper
             /// <returns>The ANSI escape sequence to set the specified cursor style.</returns>
             /// <typeinfo>public static string</typeinfo>
             public static string SetCursorStyle(CursorStyle style) => $"{CSI}{(byte)style} q";
+
             /// <summary>
             /// Sets the cursor visibility using ANSI escape sequences.
             /// </summary>
@@ -388,6 +399,7 @@ namespace consoletestproject.ConsoleHelper
             /// <returns>The ANSI escape sequence for selecting the specified graphic rendition.</returns>
             /// <typeinfo>public static string</typeinfo>
             public static string SelectGraphicRendition(params byte[] codes) => $"{CSI}{string.Join(";", codes)}m";
+
             /// <summary>
             /// Generates an ANSI escape sequence for applying a text style.
             /// </summary>

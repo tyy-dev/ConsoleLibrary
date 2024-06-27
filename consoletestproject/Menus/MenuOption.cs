@@ -129,7 +129,7 @@ namespace consoletestproject.Menus
         /// <summary>
         /// Retrieves the text of the menu option with optional decoration.
         /// </summary>
-        /// <param name="raw">If <c>true</c>, returns the raw text without decoration.</param>
+        /// <param name="raw">If <c>true</c>, returns the raw text without decoration</param>
         /// <returns>The formatted or raw text of the menu option.</returns>
         public string GetText(bool raw = false) {
             if (raw)
@@ -137,6 +137,7 @@ namespace consoletestproject.Menus
 
             return $"{(this.isDisabled == true ? "[STYLE Faint][STYLE Strikethrough]" : "")}{this.textDecoration}{this._text}[RESET]".Format();
         }
+
         /// <summary>
         /// Sets the text of the menu option.
         /// </summary>

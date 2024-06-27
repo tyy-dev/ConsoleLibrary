@@ -1,4 +1,4 @@
-using consoletestproject.ConsoleHelper;
+﻿using consoletestproject.ConsoleHelper;
 using consoletestproject.Extensions;
 
 namespace consoletestproject.Menus
@@ -8,6 +8,7 @@ namespace consoletestproject.Menus
     /// </summary>
     public class MenuService
     {
+
         #region Public Fields
 
         /// <summary>
@@ -61,7 +62,6 @@ namespace consoletestproject.Menus
                 if (value != -1)
                     MenuService.SetMenuOptionSelected(value);
             }
-
         }
 
         #endregion Public Properties
@@ -73,13 +73,13 @@ namespace consoletestproject.Menus
         /// </summary>
         /// <param name="menuOptions">The menus to be added.</param>
         /// <typeinfo>static public void</typeinfo>
-        static public void AddMenus(params Menu[] menuOptions) => MenuService.menus.AddRange(menuOptions);
+        public static void AddMenus(params Menu[] menuOptions) => MenuService.menus.AddRange(menuOptions);
 
         /// <summary>
         /// Clears all menus from the service, resetting the list to an empty state.
         /// </summary>
         /// <typeinfo>static public void</typeinfo>
-        static public void Clear() => menus.Clear();
+        public static void Clear() => menus.Clear();
 
         /// <summary>
         /// Retrieves a menu by its unique identifier.
@@ -87,7 +87,7 @@ namespace consoletestproject.Menus
         /// <param name="id">The unique identifier of the menu.</param>
         /// <returns>The menu with the specified ID, or <c>null</c> if not found.</returns>
         /// <typeinfo>static public Menu?</typeinfo>
-        static public Menu? GetMenuById(int id) => MenuService.menus.Find(menu => menu.id == id);
+        public static Menu? GetMenuById(int id) => MenuService.menus.Find(menu => menu.id == id);
 
         /// <summary>
         /// Retrieves the first menu found with a specific name.
@@ -95,7 +95,7 @@ namespace consoletestproject.Menus
         /// <param name="name">The name of the menu to retrieve.</param>
         /// <returns>The first menu with the specified name, or <c>null</c> if none is found.</returns>
         /// <typeinfo>static public Menu?</typeinfo>
-        static public Menu? GetMenuByName(string name) => MenuService.menus.Find(menu => menu.name == name);
+        public static Menu? GetMenuByName(string name) => MenuService.menus.Find(menu => menu.name == name);
 
         /// <summary>
         /// Retrieves the entire menu history.
@@ -109,7 +109,7 @@ namespace consoletestproject.Menus
         /// </summary>
         /// <returns>The list of menus.</returns>
         /// <typeinfo>static public List&lt;Menu></typeinfo>
-        static public List<Menu> GetMenus() => MenuService.menus;
+        public static List<Menu> GetMenus() => MenuService.menus;
 
         /// <summary>
         /// Retrieves all menus with a specific name.
@@ -117,7 +117,7 @@ namespace consoletestproject.Menus
         /// <param name="name">The name of the menus to retrieve.</param>
         /// <returns>The list of menus with the specified name, or <c>null</c> if none are found.</returns>
         /// <typeinfo>static public List&lt;Menu>?</typeinfo>
-        static public List<Menu>? GetMenusByName(string name) {
+        public static List<Menu>? GetMenusByName(string name) {
             List<Menu> foundMenus = [.. MenuService.menus.FindAll(menu => menu.name == name)];
             return foundMenus.Count > 0 ? foundMenus : null;
         }
@@ -168,37 +168,25 @@ namespace consoletestproject.Menus
         public static void HandleMenuKeyboardInput(ConsoleKey? keyPressed = null) {
             keyPressed ??= ConsoleInput.GetKey();
 
-            // Check if there's a current menu to operate on
+            // Check if there's a current menu to operate on, if not don't try to handle keyboard input
             if (MenuService.currentMenu == null)
                 return;
 
             switch (keyPressed) {
                 case ConsoleKey.NumPad8: // numpad up
                 case ConsoleKey.UpArrow:
-                    if (MenuService.selectedMenuOptionIndex == 0)
-                        MenuService.selectedMenuOptionIndex = MenuService.currentMenu.menuOptions.Count - 1;
-                    else if (MenuService.currentMenu?.menuOptions.IsValidIndex(selectedMenuOptionIndex) == true)
-                        do {
-                            selectedMenuOptionIndex--; // Move selection upwards
-                        } // Till it finds a valid to "select" / go to
-                        while (MenuService.currentMenu.menuOptions.IsValidIndex(selectedMenuOptionIndex) && MenuService.currentMenu.menuOptions[selectedMenuOptionIndex].isDisabled /* disabled options cant be selected */);
+                    MenuService.MoveMenuSelectionUp();
                     break;
+
                 case ConsoleKey.NumPad2: // numpad down
                 case ConsoleKey.DownArrow:
-                    if (MenuService.selectedMenuOptionIndex < 0 || MenuService.currentMenu.menuOptions.IsValidIndex(MenuService.selectedMenuOptionIndex) == true)
-                        do {
-                            selectedMenuOptionIndex++; // Move selection downwards
-                        } // Till it finds a valid place to "select" / go to
-                        while (MenuService.currentMenu.menuOptions.IsValidIndex(selectedMenuOptionIndex) && MenuService.currentMenu.menuOptions[selectedMenuOptionIndex].isDisabled /* disabled options cant be selected */);
-                    if (MenuService.currentMenu?.menuOptions.Count == MenuService.selectedMenuOptionIndex)
-                        MenuService.selectedMenuOptionIndex = 0;
+                    MenuService.MoveMenuSelectionDown();
                     break;
+
                 case ConsoleKey.NumPad6: //numpad right
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.Enter:
-                    Console.WriteLine();
-                    if (MenuService.currentMenu?.menuOptions.IsValidIndex(MenuService.selectedMenuOptionIndex) == true)
-                        MenuService.currentMenu?.menuOptions[MenuService.selectedMenuOptionIndex].Execute();
+                    MenuService.ExecuteSelectedMenuOption();
                     break;
             }
         }
@@ -209,7 +197,7 @@ namespace consoletestproject.Menus
         /// <param name="id">The unique identifier of the menu to remove.</param>
         /// <c>true</c> if the menu was removed; <c>false</c> if no menu was found by the specified id.
         /// <typeinfo>static public bool</typeinfo>
-        static public bool RemoveById(int id) {
+        public static bool RemoveById(int id) {
             int numRemoved = MenuService.menus.RemoveAll(menu => menu.id == id);
             return numRemoved > 0;
         }
@@ -238,7 +226,7 @@ namespace consoletestproject.Menus
         /// to reflect the updated selection.
         /// </remarks>
         /// <typeinfo>static public void</typeinfo>
-        static public void SetMenuOptionSelected(int index) {
+        public static void SetMenuOptionSelected(int index) {
             if (MenuService.currentMenu != null) {
                 List<MenuOption>? menuOptions = MenuService.currentMenu.GetMenuOptions();
                 if (menuOptions != null && menuOptions.IsValidIndex(index)) {
@@ -257,8 +245,78 @@ namespace consoletestproject.Menus
         /// </summary>
         /// <param name="id">The unique identifier of the menu to be displayed.</param>
         /// <typeinfo>static public void</typeinfo>
-        static public void ShowById(int id) => MenuService.GetMenuById(id)?.Show();
+        public static void ShowById(int id) => MenuService.GetMenuById(id)?.Show();
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        /// <summary>
+        /// Executes the action associated with the currently selected menu option.
+        /// </summary>
+        /// <typeinfo>private static void</typeinfo>
+        private static void ExecuteSelectedMenuOption() {
+            if (MenuService.currentMenu == null)
+                return;
+
+            if (MenuService.currentMenu?.menuOptions.IsValidIndex(MenuService.selectedMenuOptionIndex) == true) {
+                Console.WriteLine();
+                MenuService.currentMenu.menuOptions[MenuService.selectedMenuOptionIndex].Execute();
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified menu option index is valid and not disabled.
+        /// </summary>
+        /// <param name="index">The index of the menu option to check.</param>
+        /// <returns><c>true</c> if the menu option index is valid and not disabled; otherwise, <c>false</c>.</returns>
+        /// <typeinfo>public static bool</typeinfo>
+        private static bool IsMenuOptionSelectable(int index) {
+            if (MenuService.currentMenu == null)
+                return false;
+
+            return MenuService.currentMenu.menuOptions.IsValidIndex(index) && !MenuService.currentMenu.menuOptions[index].isDisabled;
+        }
+
+        /// <summary>
+        /// Moves the menu selection downwards in the menu options list.
+        /// If already at the bottom, wraps around to the top.
+        /// Skips disabled menu options.
+        /// </summary>
+        /// <typeinfo>private static void</typeinfo>
+        private static void MoveMenuSelectionDown() {
+            if (MenuService.currentMenu == null)
+                return;
+
+            if (MenuService.selectedMenuOptionIndex < 0 || !MenuService.currentMenu.menuOptions.IsValidIndex(MenuService.selectedMenuOptionIndex))
+                MenuService.selectedMenuOptionIndex = 0;
+            else {
+                do {
+                    MenuService.selectedMenuOptionIndex++; // Move selection downwards
+                } while (!MenuService.IsMenuOptionSelectable(MenuService.selectedMenuOptionIndex));
+            }
+        }
+
+        /// <summary>
+        /// Moves the menu selection upwards in the menu options list.
+        /// If already at the top, wraps around to the bottom.
+        /// Skips disabled menu options.
+        /// </summary>
+        /// <typeinfo>private static void</typeinfo>
+        private static void MoveMenuSelectionUp() {
+            if (MenuService.currentMenu == null)
+                return;
+
+            if (MenuService.selectedMenuOptionIndex == 0)
+                MenuService.selectedMenuOptionIndex = MenuService.currentMenu.menuOptions.Count - 1;
+            else {
+                do {
+                    MenuService.selectedMenuOptionIndex--; // Move selection upwards
+                } while (!MenuService.IsMenuOptionSelectable(MenuService.selectedMenuOptionIndex));
+            }
+        }
+
+        #endregion Private Methods
+
     }
 }
