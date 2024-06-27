@@ -228,7 +228,7 @@ namespace consoletestproject.Coloureds
         /// <param name="colour2">The second Colour object.</param>
         /// <returns><c>true</c> if the Colour objects are equal; otherwise, <c>false</c>.</returns>
         /// <typeinfo> public static bool operator ==</typeinfo>
-        public static bool operator ==(Colour? colour1, Colour? colour2) => colour1?.Equals(colour2) ?? false;
+        public static bool operator ==(Colour? colour1, Colour? colour2) => colour1?.Equals(colour2) ?? colour2 is null;
 
         /// <summary>
         /// Checks if the current color is equal to another color.
