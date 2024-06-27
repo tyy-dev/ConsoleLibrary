@@ -116,6 +116,19 @@ Calculates and returns the complementary color of the current color.
 The complementary  object.
 
 ---
+<a name='M:consoletestproject.Coloureds.Colour.InterpolateColour(consoletestproject.Coloureds.Colour,System.Double)'></a>
+### consoletestproject.Coloureds.Colour.InterpolateColour(consoletestproject.Coloureds.Colour,System.Double) `Method`
+#### Summary
+Interpolates between the instance colour and the provided colour.
+#### Parameters
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| colour | consoletestproject.Coloureds.Colour | The colour to interpolate with.
+| ratio | System.Double | The interpolation ratio (0.0 to 1.0).
+#### Returns
+The interpolated colour.
+
+---
 <a name='M:consoletestproject.Coloureds.Colour.ToHex'></a>
 ### consoletestproject.Coloureds.Colour.ToHex `Method` `public string`
 #### Summary
@@ -138,8 +151,8 @@ Interpolates between two values.
 The interpolated value.
 
 ---
-<a name='M:consoletestproject.Coloureds.Colour.InterpolateColors(consoletestproject.Coloureds.Colour,consoletestproject.Coloureds.Colour,System.Int32,System.Collections.Generic.List{consoletestproject.Coloureds.Colour})'></a>
-### consoletestproject.Coloureds.Colour.InterpolateColors(consoletestproject.Coloureds.Colour,consoletestproject.Coloureds.Colour,System.Int32,System.Collections.Generic.List{consoletestproject.Coloureds.Colour}) `Method` `private static void`
+<a name='M:consoletestproject.Coloureds.Colour.InterpolateColours(consoletestproject.Coloureds.Colour,consoletestproject.Coloureds.Colour,System.Int32,System.Collections.Generic.List{consoletestproject.Coloureds.Colour})'></a>
+### consoletestproject.Coloureds.Colour.InterpolateColours(consoletestproject.Coloureds.Colour,consoletestproject.Coloureds.Colour,System.Int32,System.Collections.Generic.List{consoletestproject.Coloureds.Colour}) `Method` `private static void`
 #### Summary
 Interpolates between two colours.
 #### Parameters
@@ -149,6 +162,56 @@ Interpolates between two colours.
 | end | consoletestproject.Coloureds.Colour | The ending colour.
 | granularity | System.Int32 | The number of steps in the interpolation.
 | results | System.Collections.Generic.List{consoletestproject.Coloureds.Colour} | The list to store the interpolated colours.
+
+---
+<a name='M:consoletestproject.Coloureds.Colour.op_Inequality(consoletestproject.Coloureds.Colour,consoletestproject.Coloureds.Colour)'></a>
+### consoletestproject.Coloureds.Colour.op_Inequality(consoletestproject.Coloureds.Colour,consoletestproject.Coloureds.Colour) `Method` `public static bool operator !=`
+#### Summary
+Checks if two Colour objects are not equal.
+#### Parameters
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| colour1 | consoletestproject.Coloureds.Colour | The first Colour object.
+| colour2 | consoletestproject.Coloureds.Colour | The second Colour object.
+#### Returns
+true if the Colour objects are not equal; otherwise, false.
+
+---
+<a name='M:consoletestproject.Coloureds.Colour.op_Equality(consoletestproject.Coloureds.Colour,consoletestproject.Coloureds.Colour)'></a>
+### consoletestproject.Coloureds.Colour.op_Equality(consoletestproject.Coloureds.Colour,consoletestproject.Coloureds.Colour) `Method` `public static bool operator ==`
+#### Summary
+Checks if two Colour objects are equal.
+#### Parameters
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| colour1 | consoletestproject.Coloureds.Colour | The first Colour object.
+| colour2 | consoletestproject.Coloureds.Colour | The second Colour object.
+#### Returns
+true if the Colour objects are equal; otherwise, false.
+
+---
+<a name='M:consoletestproject.Coloureds.Colour.Equals(System.Object)'></a>
+### consoletestproject.Coloureds.Colour.Equals(System.Object) `Method` `public override bool`
+#### Summary
+Checks if the current color is equal to another color.
+#### Parameters
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| colour | System.Object | The other color to check for equality
+#### Returns
+true if the colors are equal; otherwise, false.
+
+---
+<a name='M:consoletestproject.Coloureds.Colour.GetHashCode'></a>
+### consoletestproject.Coloureds.Colour.GetHashCode `Method` `public override int`
+#### Summary
+Returns a hash code for the current  object.
+            This method is used to provide a unique identifier for the object,
+            and ensures that two  objects with the same RGB values
+            have the same hash code. This is important for collections that use hashing,
+            such as dictionaries or hash sets.
+#### Returns
+A hash code for the current  object, which is a 32-bit signed integer.
 
 ---
 <a name='T:consoletestproject.ConsoleHelper.Ansi'></a>
@@ -1309,7 +1372,7 @@ Retrieves the text of the menu option with optional decoration.
 #### Parameters
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| raw | System.Boolean | If true, returns the raw text without decoration.
+| raw | System.Boolean | If true, returns the raw text without decoration
 #### Returns
 The formatted or raw text of the menu option.
 
@@ -1322,7 +1385,7 @@ Sets the text of the menu option.
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | text | System.String | The new text of the menu option. Defaults to "Option {id}" if not provided.
-| raw | System.Boolean | If true sets the text without decoration / or ansi styling
+| raw | System.Boolean | If true, sets the text without decoration / or ansi styling.
 
 ---
 <a name='M:consoletestproject.Menus.MenuOption.SetTextDecoration(System.String)'></a>
