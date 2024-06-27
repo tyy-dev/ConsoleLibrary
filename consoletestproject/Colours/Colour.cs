@@ -1,4 +1,4 @@
-﻿namespace consoletestproject.Coloureds
+namespace consoletestproject.Coloureds
 {
     /// <summary>
     /// Represents a color with RGB components.
@@ -79,7 +79,7 @@
             List<Colour> gradientColours = [];
 
             for (int i = 0; i < colours.Count - 1; i++) {
-                Colour.InterpolateColors(colours[i], colours[i + 1], granularity, gradientColours);
+                Colour.InterpolateColours(colours[i], colours[i + 1], granularity, gradientColours);
             }
 
             gradientColours.Add(colours[^1]);
@@ -155,6 +155,19 @@
         }
 
         /// <summary>
+        /// Interpolates between the instance colour and the provided colour.
+        /// </summary>
+        /// <param name="colour">The colour to interpolate with.</param>
+        /// <param name="ratio">The interpolation ratio (0.0 to 1.0).</param>
+        /// <returns>The interpolated colour.</returns>
+        public Colour InterpolateColour(Colour colour, double ratio = 0.5) {
+            byte interpolatedR = Interpolate(colour.r, this.r, ratio);
+            byte interpolatedG = Interpolate(colour.g, this.g, ratio);
+            byte interpolatedB = Interpolate(colour.b, this.b, ratio);
+            return new(interpolatedR, interpolatedG, interpolatedB);
+        }
+
+        /// <summary>
         /// Converts the current RGB Colour values to a hexadecimal Colour code.
         /// </summary>
         /// <returns>A string representing the hexadecimal Colour code.</returns>
@@ -185,7 +198,7 @@
         /// <param name="granularity">The number of steps in the interpolation.</param>
         /// <param name="results">The list to store the interpolated colours.</param>
         /// <typeinfo>private static void</typeinfo>
-        private static void InterpolateColors(Colour start, Colour end, int granularity, List<Colour> results) {
+        private static void InterpolateColours(Colour start, Colour end, int granularity, List<Colour> results) {
             for (int j = 0; j <= granularity; j++) {
                 double ratio = (double)j / granularity;
                 byte interpolatedR = Interpolate(start.r, end.r, ratio);
@@ -196,5 +209,53 @@
         }
 
         #endregion Private Methods
+
+        #region Override Methods
+
+        /// <summary>
+        /// Checks if two Colour objects are not equal.
+        /// </summary>
+        /// <param name="colour1">The first Colour object.</param>
+        /// <param name="colour2">The second Colour object.</param>
+        /// <returns><c>true</c> if the Colour objects are not equal; otherwise, <c>false</c>.</returns>
+        /// <typeinfo> public static bool operator !=</typeinfo>
+        public static bool operator !=(Colour? colour1, Colour? colour2) => !(colour1 == colour2);
+
+        /// <summary>
+        /// Checks if two Colour objects are equal.
+        /// </summary>
+        /// <param name="colour1">The first Colour object.</param>
+        /// <param name="colour2">The second Colour object.</param>
+        /// <returns><c>true</c> if the Colour objects are equal; otherwise, <c>false</c>.</returns>
+        /// <typeinfo> public static bool operator ==</typeinfo>
+        public static bool operator ==(Colour? colour1, Colour? colour2) => colour1.Equals(colour2);
+
+        /// <summary>
+        /// Checks if the current color is equal to another color.
+        /// </summary>
+        /// <param name="colour">The other color to check for equality</param>
+        /// <returns><c>true</c> if the colors are equal; otherwise, <c>false</c>.</returns>
+        /// <typeinfo>public override bool</typeinfo>
+        public override bool Equals(object? colour) {
+            if (colour is Colour col)
+                return this.r == col.r && this.g == col.g && this.b == col.b;
+            return false;
+        }
+        /// <summary>
+        /// Returns a hash code for the current <see cref="Colour"/> object.
+        /// This method is used to provide a unique identifier for the object,
+        /// and ensures that two <see cref="Colour"/> objects with the same RGB values
+        /// have the same hash code. This is important for collections that use hashing,
+        /// such as dictionaries or hash sets.
+        /// </summary>
+        /// <returns>
+        /// A hash code for the current <see cref="Colour"/> object, which is a 32-bit signed integer.
+        /// </returns>
+        /// <typeinfo>public override int</typeinfo>
+        public override int GetHashCode() {
+            return HashCode.Combine(r, g, b);
+        }
+
+        #endregion
     }
 }
