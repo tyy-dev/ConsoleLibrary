@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using consoletestproject.Coloureds;
 using consoletestproject.ConsoleHelper;
 
@@ -34,14 +34,6 @@ namespace consoletestproject.Extensions
         /// - [STYLE &lt;style>] for specifying text style, where &lt;style> can be any valid value from AnsiStyle (eg, Bold), or any valid index from AnsiStyle, (eg 1 for bold) <br> </br>
         /// - [RESET] for resetting text formatting.  <br> </br>
         /// Note: The tags are case-sensitive; if a tag's arguments or name are invalid, they will simply not be matched and left as is.<br> </br>
-        /// <example>
-        /// Example usage:
-        /// <code>
-        ///  "[COLOUR 255,0,0]Red[RESET], [COLOUR 0, 255, 0]Green[RESET], [COLOUR #0000FF]Blue[RESET]".Format().WriteLine();
-        ///  "[STYLE 3]Style by index[RESET], [STYLE Bold][BGCOLOUR 125,255,0]Background colour[RESET]".Format().WriteLine();
-        /// </code>
-        /// <returns></returns>
-        /// </example>
         /// </remarks>
         /// <returns>The formatted text with ANSI escape sequences.</returns>
         /// <typeinfo>public static string</typeinfo>
@@ -88,6 +80,7 @@ namespace consoletestproject.Extensions
                 return match.Value;  // If the tag is unsupported, none are matched / or is invalid, keep it as is
             });
         }
+
         /// <summary>
         /// Applies a gradient effect to the specified text using ANSI escape sequences.
         /// </summary>
@@ -95,21 +88,6 @@ namespace consoletestproject.Extensions
         /// <param name="gradient">A list of colours representing the gradient.</param>
         /// <param name="foreground">Specifies whether to set the foreground colour (<c>true</c>) or background colour (<c>false</c>).</param>
         /// <returns>The text with gradient effect applied.</returns>
-        /// <remarks>
-        /// <example>
-        /// Example usage:
-        /// <code>
-        /// <![CDATA[
-        /// List<Colour> gradient = Colour.Gradient([
-        ///     new (255, 0, 0), // Red
-        ///     new (0, 255, 0), // Green
-        ///     new (0, 0, 255) // Blue
-        /// ]);
-        /// Console.WriteLine("Gradient".Gradient(gradient, foreground: false)); // Background R,G,B Gradient
-        /// ]]>
-        /// </code>
-        /// </example>
-        /// </remarks>
         /// <typeinfo>public static string</typeinfo>
         public static string Gradient(this string text, List<Colour> gradient, bool foreground = true) =>
             Ansi.Text.Gradient(gradient, text, foreground).Reset(true);
@@ -155,8 +133,9 @@ namespace consoletestproject.Extensions
         /// <typeinfo>public static string</typeinfo>
         public static string Style(this string text, Ansi.AnsiStyle style) =>
             $"{Ansi.Text.Style(style)}{text}{Ansi.Text.Reset()}";
+
         /// <summary>
-        /// Converts the input text to superscript.
+        /// Converts the input text to superscript. ˢᵐᵃˡˡ ᵗᵉˣᵗ
         /// </summary>
         /// <param name="text">The text to convert to superscript.</param>
         /// <returns>The input text converted to superscript.</returns>
