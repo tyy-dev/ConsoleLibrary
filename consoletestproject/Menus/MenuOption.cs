@@ -129,7 +129,7 @@ namespace consoletestproject.Menus
         /// <summary>
         /// Retrieves the text of the menu option with optional decoration.
         /// </summary>
-        /// <param name="raw">If true, returns the raw text without decoration.</param>
+        /// <param name="raw">If <c>true</c>, returns the raw text without decoration.</param>
         /// <returns>The formatted or raw text of the menu option.</returns>
         public string GetText(bool raw = false) {
             if (raw)
@@ -141,7 +141,7 @@ namespace consoletestproject.Menus
         /// Sets the text of the menu option.
         /// </summary>
         /// <param name="text">The new text of the menu option. Defaults to "Option {id}" if not provided.</param>
-        /// <param name="raw"></param>
+        /// <param name="raw">If <c>true</c>, sets the text without decoration / or ansi styling.</param>
         public void SetText(string? text = null, bool raw = false) {
             if (raw)
                 this.text = text ?? $"Option {this.id}";
