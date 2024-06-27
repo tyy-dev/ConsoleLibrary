@@ -117,7 +117,7 @@ The complementary  object.
 
 ---
 <a name='M:consoletestproject.Coloureds.Colour.InterpolateColour(consoletestproject.Coloureds.Colour,System.Double)'></a>
-### consoletestproject.Coloureds.Colour.InterpolateColour(consoletestproject.Coloureds.Colour,System.Double) `Method`
+### consoletestproject.Coloureds.Colour.InterpolateColour(consoletestproject.Coloureds.Colour,System.Double) `Method` `public Colour`
 #### Summary
 Interpolates between the instance colour and the provided colour.
 #### Parameters
@@ -135,6 +135,19 @@ The interpolated colour.
 Converts the current RGB Colour values to a hexadecimal Colour code.
 #### Returns
 A string representing the hexadecimal Colour code.
+
+---
+<a name='M:consoletestproject.Coloureds.Colour.IsHexFormat(System.String)'></a>
+### consoletestproject.Coloureds.Colour.IsHexFormat(System.String) `Method` `private static bool`
+#### Summary
+Checks if the given string represents a hexadecimal color code.
+            Hexadecimal color codes can be in the format #AABBCC or AABBCC.
+#### Parameters
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| str | System.String | The string to check.
+#### Returns
+True if the string is a hexadecimal color code, false otherwise.
 
 ---
 <a name='M:consoletestproject.Coloureds.Colour.Interpolate(System.Byte,System.Byte,System.Double)'></a>
@@ -829,10 +842,6 @@ This method applies formatting to the input text based on tags enclosed in squar
             - [STYLE <style>] for specifying text style, where <style> can be any valid value from AnsiStyle (eg, Bold), or any valid index from AnsiStyle, (eg 1 for bold) 
             - [RESET] for resetting text formatting.  
             Note: The tags are case-sensitive; if a tag's arguments or name are invalid, they will simply not be matched and left as is.
-            Example usage:
-            
-             "[COLOUR 255,0,0]Red[RESET], [COLOUR 0, 255, 0]Green[RESET], [COLOUR #0000FF]Blue[RESET]".Format().WriteLine();
-             "[STYLE 3]Style by index[RESET], [STYLE Bold][BGCOLOUR 125,255,0]Background colour[RESET]".Format().WriteLine();
 #### Parameters
 | Name | Type | Description |
 | ---- | ---- | ----------- |
@@ -845,15 +854,6 @@ The formatted text with ANSI escape sequences.
 ### consoletestproject.Extensions.StringExtensions.Gradient(System.String,System.Collections.Generic.List{consoletestproject.Coloureds.Colour},System.Boolean) `Method` `public static string`
 #### Summary
 Applies a gradient effect to the specified text using ANSI escape sequences.
-#### Remarks
-Example usage:
-            
-            List<Colour> gradient = Colour.Gradient([
-                new (255, 0, 0), // Red
-                new (0, 255, 0), // Green
-                new (0, 0, 255) // Blue
-            ]);
-            Console.WriteLine("Gradient".Gradient(gradient, foreground: false)); // Background R,G,B Gradient
 #### Parameters
 | Name | Type | Description |
 | ---- | ---- | ----------- |
@@ -914,7 +914,7 @@ The styled text.
 <a name='M:consoletestproject.Extensions.StringExtensions.Superscript(System.String)'></a>
 ### consoletestproject.Extensions.StringExtensions.Superscript(System.String) `Method` `public static string`
 #### Summary
-Converts the input text to superscript.
+Converts the input text to superscript. ˢᵐᵃˡˡ ᵗᵉˣᵗ
 #### Remarks
 This method converts alphanumeric characters in the input text to their corresponding Unicode superscript characters
 #### Parameters
