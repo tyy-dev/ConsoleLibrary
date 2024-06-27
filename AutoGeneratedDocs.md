@@ -1586,3 +1586,37 @@ Displays the menu with the specified unique identifier on the console
 | id | System.Int32 | The unique identifier of the menu to be displayed.
 
 ---
+<a name='M:consoletestproject.Menus.MenuService.ExecuteSelectedMenuOption'></a>
+### consoletestproject.Menus.MenuService.ExecuteSelectedMenuOption `Method` `private static void`
+#### Summary
+Executes the action associated with the currently selected menu option.
+
+---
+<a name='M:consoletestproject.Menus.MenuService.IsMenuOptionSelectable(System.Int32)'></a>
+### consoletestproject.Menus.MenuService.IsMenuOptionSelectable(System.Int32) `Method` `public static bool`
+#### Summary
+Checks if the specified menu option index is valid and not disabled.
+#### Parameters
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| index | System.Int32 | The index of the menu option to check.
+#### Returns
+true if the menu option index is valid and not disabled; otherwise, false.
+
+---
+<a name='M:consoletestproject.Menus.MenuService.MoveMenuSelectionDown'></a>
+### consoletestproject.Menus.MenuService.MoveMenuSelectionDown `Method` `private static void`
+#### Summary
+Moves the menu selection downwards in the menu options list.
+            If already at the bottom, wraps around to the top.
+            Skips disabled menu options.
+
+---
+<a name='M:consoletestproject.Menus.MenuService.MoveMenuSelectionUp'></a>
+### consoletestproject.Menus.MenuService.MoveMenuSelectionUp `Method` `private static void`
+#### Summary
+Moves the menu selection upwards in the menu options list.
+            If already at the top, wraps around to the bottom.
+            Skips disabled menu options.
+
+---
