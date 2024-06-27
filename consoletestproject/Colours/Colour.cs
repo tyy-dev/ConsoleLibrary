@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace consoletestproject.Coloureds
 {
     /// <summary>
@@ -36,6 +38,9 @@ namespace consoletestproject.Coloureds
         /// <param name="hexColour">The hexadecimal color string (e.g., "#RRGGBB").</param>
         /// <typeinfo>public</typeinfo>
         public Colour(string hexColour) {
+            if (!IsHexFormat(hexColour))
+                return;
+
             Colour.HexToRgb(hexColour, out byte r, out byte g, out byte b);
             this.r = r;
             this.g = g;
@@ -97,11 +102,11 @@ namespace consoletestproject.Coloureds
         /// <exception cref="ArgumentException">Thrown when the input hex Colour string is not in the correct format (#RRGGBB).</exception>
         /// <typeinfo>public static void</typeinfo>
         public static void HexToRgb(string hexColour, out byte r, out byte g, out byte b) {
+            if (IsHexFormat(hexColour))
+                throw new ArgumentException("Invalid hex Colour string. It should be in the format #RRGGBB or RRGGBB", nameof(hexColour));
+
             if (hexColour.StartsWith('#')) // Get if the first character is, startsWith
                 hexColour = hexColour[1..]; // Remove the first character, slice
-
-            if (hexColour.Length != 6)
-                throw new ArgumentException("Invalid hex Colour string. It should be in the format #RRGGBB or RRGGBB", nameof(hexColour));
 
             r = Convert.ToByte(hexColour[..2], 16);
             g = Convert.ToByte(hexColour[2..4], 16);
@@ -121,14 +126,12 @@ namespace consoletestproject.Coloureds
             string[] rgb = args.Split(',').Select(x => x.Trim()).ToArray();
 
             // Check if the input is in RGB format (three comma-separated values), and then attempt to parse R,G,B values as bytes.
-            if (rgb.Length == 3 && byte.TryParse(rgb[0], out byte r) && byte.TryParse(rgb[1], out byte g) && byte.TryParse(rgb[2], out byte b)) {
+            if (rgb.Length == 3 && byte.TryParse(rgb[0], out byte r) && byte.TryParse(rgb[1], out byte g) && byte.TryParse(rgb[2], out byte b))
                 return new(r, g, b);  // Create and return a Colour object
-            }
 
             // Check if the input is in hexadecimal format (either #AABBCC or AABBCC)
-            else if (rgb.Length == 1 && (rgb[0].Length == 6 || (rgb[0].Length == 7 && rgb[0].StartsWith('#')))) {
-                return new(rgb[0]);  // Create and return a Colour object from hexadecimal string
-            }
+            else if (rgb.Length == 1 && IsHexFormat(rgb[0]))
+                return new(rgb[0]);  // Create and return a Colour object from the hexadecimal string
 
             return null;  // Return null if input doesn't match expected formats
         }
@@ -151,7 +154,7 @@ namespace consoletestproject.Coloureds
         /// <returns>The complementary <see cref="Colour"/> object.</returns>
         /// <typeinfo>public Colour</typeinfo>
         public Colour GetComplementary() {
-            return new((byte)(255 - r), (byte)(255 - g), (byte)(255 - b));
+            return new((byte)(255 - this.r), (byte)(255 - this.g), (byte)(255 - this.b));
         }
 
         /// <summary>
@@ -160,6 +163,7 @@ namespace consoletestproject.Coloureds
         /// <param name="colour">The colour to interpolate with.</param>
         /// <param name="ratio">The interpolation ratio (0.0 to 1.0).</param>
         /// <returns>The interpolated colour.</returns>
+        /// <typeinfo>public Colour</typeinfo>
         public Colour InterpolateColour(Colour colour, double ratio = 0.5) {
             byte interpolatedR = Interpolate(colour.r, this.r, ratio);
             byte interpolatedG = Interpolate(colour.g, this.g, ratio);
@@ -173,6 +177,19 @@ namespace consoletestproject.Coloureds
         /// <returns>A string representing the hexadecimal Colour code.</returns>
         /// <typeinfo>public string</typeinfo>
         public string ToHex() => Colour.RgbToHex(this.r, this.g, this.b);
+
+        /// <summary>
+        /// Checks if the given string represents a hexadecimal color code.
+        /// Hexadecimal color codes can be in the format #AABBCC or AABBCC.
+        /// </summary>
+        /// <param name="str">The string to check.</param>
+        /// <returns>True if the string is a hexadecimal color code, false otherwise.</returns>
+        /// <typeinfo>private static bool</typeinfo>
+        public static bool IsHexFormat(string str) {
+            // Regex pattern to match hexadecimal color codes: #AABBCC or AABBCC
+            string hexPattern = @"^#([A-Fa-f0-9]{6})$";
+            return Regex.IsMatch(str, hexPattern);
+        }
 
         #endregion Public Methods
 
@@ -241,6 +258,7 @@ namespace consoletestproject.Coloureds
                 return this.r == col.r && this.g == col.g && this.b == col.b;
             return false;
         }
+
         /// <summary>
         /// Returns a hash code for the current <see cref="Colour"/> object.
         /// This method is used to provide a unique identifier for the object,
@@ -253,9 +271,9 @@ namespace consoletestproject.Coloureds
         /// </returns>
         /// <typeinfo>public override int</typeinfo>
         public override int GetHashCode() {
-            return HashCode.Combine(r, g, b);
+            return HashCode.Combine(this.r, this.g, this.b);
         }
 
-        #endregion
+        #endregion Override Methods
     }
 }
