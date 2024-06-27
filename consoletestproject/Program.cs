@@ -53,9 +53,9 @@ namespace consoletestproject
                 new(id: 3, "Go to sub menu by name",  (MenuOption context) => {
                     MenuService.GetMenuByName("Sub Menu")?.Show();
                 }, isDisabled: true),
-                new(id: 3, "Go to sub menu by submenu id",  (MenuOption context) => {
+                new(id: 4, "Go to sub menu by submenu id",  (MenuOption context) => {
                 }, submenuId: 1),
-                new(id: 4, "Set option enabled/disabled", (MenuOption context) => {
+                new(id: 5, "Set option enabled/disabled", (MenuOption context) => {
                     bool? value = ConsoleInput.GetAsBool("Do you want to disable the option \"Go to sub menu by name\"? [Y/N]");
                     if (value is bool val) {
                         int? indexOfDisabledOption = context.parent?.MenuOptionIdToIndex(id: 3);
